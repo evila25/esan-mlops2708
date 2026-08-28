@@ -1,0 +1,40 @@
+name: Auto PR from Dev to Main
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Create Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "dev"
+          destination_branch: "main"
+          pr_title: "Auto PR: Merge dev into main"
+          pr_body: |
+            ## 🤖 Pull Request Automático
+            
+            Este PR fue creado automáticamente después de un push a la rama `dev`.
+            
+            ### 📋 Cambios
+            Por favor, revisa los cambios antes de hacer merge.
+            
+            ### ✅ Checklist
+            - [ ] Los tests pasan correctamente
+            - [ ] El código ha sido revisado
+            - [ ] La documentación está actualizada
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_label: "auto-generated,dev-to-main"
